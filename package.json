@@ -1,0 +1,22 @@
+{
+  "name": "filemanager",
+  "version": "1.0.0",
+  "description": "Windows文件管理器MCP服务，提供基础文件管理功能",
+  "main": "index.js",
+  "bin": {
+    "filemanager": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["mcp", "file-manager", "windows", "file-operations"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.3",
+    "fs-extra": "^11.3.1",
+    "path": "^0.12.7"
+  }
+}
