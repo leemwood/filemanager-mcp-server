@@ -338,6 +338,140 @@ class FileManagerServer {
             },
             required: ['files']
           }
+        },
+        {
+          name: 'edit_file_advanced',
+          description: '高级文件编辑功能（支持部分编辑、多编码、备份等）',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              path: {
+                type: 'string',
+                description: '文件路径'
+              },
+              content: {
+                type: 'string',
+                description: '要写入的内容'
+              },
+              encoding: {
+                type: 'string',
+                description: '文件编码',
+                default: 'utf8',
+                enum: ['utf8', 'utf16le', 'latin1', 'ascii', 'base64', 'hex']
+              },
+              backup: {
+                type: 'boolean',
+                description: '是否创建备份文件',
+                default: false
+              },
+              mode: {
+                type: 'string',
+                description: '编辑模式',
+                default: 'overwrite',
+                enum: ['overwrite', 'append', 'prepend', 'insert']
+              },
+              position: {
+                type: 'integer',
+                description: '插入位置（仅在insert模式下使用）',
+                minimum: 0
+              }
+            },
+            required: ['path', 'content']
+          }
+        },
+        {
+          name: 'create_from_template',
+          description: '从模板创建文件',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              template: {
+                type: 'string',
+                description: '模板名称或模板文件路径'
+              },
+              path: {
+                type: 'string',
+                description: '目标文件路径'
+              },
+              variables: {
+                type: 'object',
+                description: '模板变量（键值对）',
+                additionalProperties: {
+                  type: 'string'
+                }
+              }
+            },
+            required: ['template', 'path']
+          }
+        },
+        {
+          name: 'create_project_structure',
+          description: '创建项目目录结构',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              basePath: {
+                type: 'string',
+                description: '项目根目录路径'
+              },
+              structure: {
+                type: 'object',
+                description: '目录结构定义（嵌套对象，文件用字符串表示内容，目录用对象表示）'
+              },
+              template: {
+                type: 'string',
+                description: '预定义的项目模板类型',
+                enum: ['nodejs', 'react', 'vue', 'python', 'java', 'custom']
+              }
+            },
+            required: ['basePath']
+          }
+        },
+        {
+          name: 'read_file_advanced',
+          description: '高级文件读取功能（支持多编码、部分读取等）',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              path: {
+                type: 'string',
+                description: '文件路径'
+              },
+              encoding: {
+                type: 'string',
+                description: '文件编码',
+                default: 'utf8',
+                enum: ['utf8', 'utf16le', 'latin1', 'ascii', 'base64', 'hex']
+              },
+              start: {
+                type: 'integer',
+                description: '开始位置（字节）',
+                minimum: 0
+              },
+              length: {
+                type: 'integer',
+                description: '读取长度（字节）',
+                minimum: 1
+              },
+              lines: {
+                type: 'object',
+                properties: {
+                  start: {
+                    type: 'integer',
+                    description: '开始行号（从1开始）',
+                    minimum: 1
+                  },
+                  end: {
+                    type: 'integer',
+                    description: '结束行号（包含）',
+                    minimum: 1
+                  }
+                },
+                description: '按行读取范围'
+              }
+            },
+            required: ['path']
+          }
         }
       ]
     }));
@@ -377,6 +511,14 @@ class FileManagerServer {
             return await this.batchDeleteFiles(args.paths, args.force);
           case 'batch_create_files':
             return await this.batchCreateFiles(args.files);
+          case 'edit_file_advanced':
+            return await this.editFileAdvanced(args.path, args.content, args.encoding, args.backup, args.mode, args.position);
+          case 'create_from_template':
+            return await this.createFromTemplate(args.template, args.path, args.variables);
+          case 'create_project_structure':
+            return await this.createProjectStructure(args.basePath, args.structure, args.template);
+          case 'read_file_advanced':
+            return await this.readFileAdvanced(args.path, args.encoding, args.start, args.length, args.lines);
           default:
             throw new McpError(
               ErrorCode.MethodNotFound,
@@ -1027,6 +1169,258 @@ class FileManagerServer {
       throw new McpError(
         ErrorCode.InternalError,
         `批量创建文件失败: ${error.message}`
+      );
+    }
+  }
+
+  // 高级文件编辑功能
+  async editFileAdvanced(filePath, content, encoding = 'utf8', backup = false, mode = 'overwrite', position = 0) {
+    try {
+      const absolutePath = path.resolve(filePath);
+      
+      // 创建备份
+      if (backup && await fs.pathExists(absolutePath)) {
+        const backupPath = `${absolutePath}.backup.${Date.now()}`;
+        await fs.copy(absolutePath, backupPath);
+      }
+      
+      let finalContent = content;
+      
+      // 根据编辑模式处理内容
+      if (mode !== 'overwrite' && await fs.pathExists(absolutePath)) {
+        const existingContent = await fs.readFile(absolutePath, encoding);
+        
+        switch (mode) {
+          case 'append':
+            finalContent = existingContent + content;
+            break;
+          case 'prepend':
+            finalContent = content + existingContent;
+            break;
+          case 'insert':
+            const lines = existingContent.split('\n');
+            const insertLines = content.split('\n');
+            lines.splice(position, 0, ...insertLines);
+            finalContent = lines.join('\n');
+            break;
+        }
+      }
+      
+      // 确保目录存在
+      await fs.ensureDir(path.dirname(absolutePath));
+      
+      // 写入文件
+      await fs.writeFile(absolutePath, finalContent, encoding);
+      
+      return {
+         content: `文件编辑成功: ${absolutePath}\n模式: ${mode}\n编码: ${encoding}\n备份: ${backup ? '已创建' : '未创建'}`
+       };
+    } catch (error) {
+      throw new McpError(
+        ErrorCode.InternalError,
+        `编辑文件失败: ${error.message}`
+      );
+    }
+  }
+
+  // 从模板创建文件
+  async createFromTemplate(template, filePath, variables = {}) {
+    try {
+      const absolutePath = path.resolve(filePath);
+      let templateContent = '';
+      
+      // 检查是否是预定义模板
+      const templatePath = path.resolve('templates', `${template}.${path.extname(filePath).slice(1)}`);
+      if (await fs.pathExists(templatePath)) {
+        templateContent = await fs.readFile(templatePath, 'utf8');
+      } else if (await fs.pathExists(template)) {
+        // 直接使用模板文件路径
+        templateContent = await fs.readFile(template, 'utf8');
+      } else {
+        throw new Error(`模板不存在: ${template}`);
+      }
+      
+      // 替换模板变量
+      let processedContent = templateContent;
+      
+      // 添加默认变量
+      const defaultVariables = {
+        DATE: new Date().toISOString().split('T')[0],
+        YEAR: new Date().getFullYear().toString(),
+        FILENAME: path.basename(filePath, path.extname(filePath)),
+        FILEPATH: absolutePath,
+        ...variables
+      };
+      
+      // 替换变量 {{variable}}
+      for (const [key, value] of Object.entries(defaultVariables)) {
+        const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
+        processedContent = processedContent.replace(regex, value);
+      }
+      
+      // 确保目录存在
+      await fs.ensureDir(path.dirname(absolutePath));
+      
+      // 创建文件
+      await fs.writeFile(absolutePath, processedContent, 'utf8');
+      
+      return {
+         content: `从模板创建文件成功: ${absolutePath}\n模板: ${template}\n变量: ${Object.keys(defaultVariables).join(', ')}`
+       };
+    } catch (error) {
+      throw new McpError(
+        ErrorCode.InternalError,
+        `从模板创建文件失败: ${error.message}`
+      );
+    }
+  }
+
+  // 创建项目结构
+  async createProjectStructure(basePath, structure = null, template = 'custom') {
+    try {
+      const absoluteBasePath = path.resolve(basePath);
+      
+      // 预定义项目模板
+      const projectTemplates = {
+        nodejs: {
+          'package.json': JSON.stringify({
+            name: path.basename(absoluteBasePath),
+            version: '1.0.0',
+            description: '',
+            main: 'index.js',
+            scripts: {
+              test: 'echo "Error: no test specified" && exit 1',
+              start: 'node index.js'
+            },
+            keywords: [],
+            author: '',
+            license: 'ISC'
+          }, null, 2),
+          'index.js': 'console.log("Hello World!");',
+          'README.md': `# ${path.basename(absoluteBasePath)}\n\n项目描述\n\n## 安装\n\n\`\`\`bash\nnpm install\n\`\`\`\n\n## 使用\n\n\`\`\`bash\nnpm start\n\`\`\``,
+          src: {
+            'app.js': '// 应用程序主文件',
+            utils: {
+              'helpers.js': '// 工具函数'
+            }
+          },
+          tests: {
+            'app.test.js': '// 测试文件'
+          }
+        },
+        react: {
+          'package.json': JSON.stringify({
+            name: path.basename(absoluteBasePath),
+            version: '0.1.0',
+            private: true,
+            dependencies: {
+              react: '^18.2.0',
+              'react-dom': '^18.2.0'
+            },
+            scripts: {
+              start: 'react-scripts start',
+              build: 'react-scripts build',
+              test: 'react-scripts test',
+              eject: 'react-scripts eject'
+            }
+          }, null, 2),
+          public: {
+            'index.html': '<!DOCTYPE html>\n<html>\n<head>\n  <title>React App</title>\n</head>\n<body>\n  <div id="root"></div>\n</body>\n</html>'
+          },
+          src: {
+            'index.js': 'import React from "react";\nimport ReactDOM from "react-dom/client";\nimport App from "./App";\n\nconst root = ReactDOM.createRoot(document.getElementById("root"));\nroot.render(<App />);',
+            'App.js': 'import React from "react";\n\nfunction App() {\n  return (\n    <div>\n      <h1>Hello React!</h1>\n    </div>\n  );\n}\n\nexport default App;'
+          }
+        },
+        python: {
+          'main.py': 'def main():\n    print("Hello World!")\n\nif __name__ == "__main__":\n    main()',
+          'requirements.txt': '# 项目依赖',
+          'README.md': `# ${path.basename(absoluteBasePath)}\n\nPython项目描述\n\n## 安装\n\n\`\`\`bash\npip install -r requirements.txt\n\`\`\`\n\n## 使用\n\n\`\`\`bash\npython main.py\n\`\`\``,
+          src: {
+            '__init__.py': '',
+            'app.py': '# 应用程序主文件'
+          },
+          tests: {
+            '__init__.py': '',
+            'test_app.py': '# 测试文件'
+          }
+        }
+      };
+      
+      // 使用指定的结构或模板
+      const finalStructure = structure || projectTemplates[template] || {};
+      
+      // 递归创建结构
+      await this.createStructureRecursive(absoluteBasePath, finalStructure);
+      
+      return {
+         content: `项目结构创建成功: ${absoluteBasePath}\n模板: ${template}\n创建的文件和目录已按结构生成`
+       };
+    } catch (error) {
+      throw new McpError(
+        ErrorCode.InternalError,
+        `创建项目结构失败: ${error.message}`
+      );
+    }
+  }
+
+  // 递归创建目录结构
+  async createStructureRecursive(basePath, structure) {
+    for (const [name, content] of Object.entries(structure)) {
+      const fullPath = path.join(basePath, name);
+      
+      if (typeof content === 'string') {
+        // 文件
+        await fs.ensureDir(path.dirname(fullPath));
+        await fs.writeFile(fullPath, content, 'utf8');
+      } else if (typeof content === 'object' && content !== null) {
+        // 目录
+        await fs.ensureDir(fullPath);
+        await this.createStructureRecursive(fullPath, content);
+      }
+    }
+  }
+
+  // 高级文件读取功能
+  async readFileAdvanced(filePath, encoding = 'utf8', start = null, length = null, lines = null) {
+    try {
+      const absolutePath = path.resolve(filePath);
+      
+      if (!await fs.pathExists(absolutePath)) {
+        throw new Error(`文件不存在: ${absolutePath}`);
+      }
+      
+      // 按行读取
+      if (lines && lines.start && lines.end) {
+        const content = await fs.readFile(absolutePath, encoding);
+        const allLines = content.split('\n');
+        const selectedLines = allLines.slice(lines.start - 1, lines.end);
+        return {
+           content: `文件内容 (第${lines.start}-${lines.end}行):\n\n${selectedLines.join('\n')}`
+         };
+      }
+      
+      // 按字节读取
+      if (start !== null || length !== null) {
+        const buffer = await fs.readFile(absolutePath);
+        const startPos = start || 0;
+        const endPos = length ? startPos + length : buffer.length;
+        const slicedBuffer = buffer.slice(startPos, endPos);
+        const content = slicedBuffer.toString(encoding);
+        return {
+           content: `文件内容 (字节${startPos}-${endPos}):\n\n${content}`
+         };
+      }
+      
+      // 完整读取
+      const content = await fs.readFile(absolutePath, encoding);
+      return {
+         content: `文件内容:\n\n${content}`
+       };
+    } catch (error) {
+      throw new McpError(
+        ErrorCode.InternalError,
+        `读取文件失败: ${error.message}`
       );
     }
   }

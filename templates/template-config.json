@@ -1,0 +1,362 @@
+{
+  "templates": {
+    "html5": {
+      "name": "HTML5页面模板",
+      "description": "现代HTML5页面模板，包含响应式设计和最佳实践",
+      "category": "web",
+      "language": "html",
+      "extension": ".html",
+      "variables": {
+        "title": {
+          "type": "string",
+          "default": "我的网页",
+          "description": "页面标题"
+        },
+        "description": {
+          "type": "string",
+          "default": "一个现代的HTML5网页",
+          "description": "页面描述"
+        },
+        "keywords": {
+          "type": "string",
+          "default": "HTML5, 响应式, 现代",
+          "description": "页面关键词"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "year": {
+          "type": "string",
+          "default": "{{currentYear}}",
+          "description": "版权年份"
+        }
+      }
+    },
+    "nodejs": {
+      "name": "Node.js应用模板",
+      "description": "Node.js应用程序模板，包含最佳实践和错误处理",
+      "category": "backend",
+      "language": "javascript",
+      "extension": ".js",
+      "variables": {
+        "title": {
+          "type": "string",
+          "default": "Node.js应用",
+          "description": "应用标题"
+        },
+        "description": {
+          "type": "string",
+          "default": "一个Node.js应用程序",
+          "description": "应用描述"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "版本号"
+        },
+        "date": {
+          "type": "string",
+          "default": "{{currentDate}}",
+          "description": "创建日期"
+        },
+        "className": {
+          "type": "string",
+          "default": "MyApp",
+          "description": "主类名"
+        }
+      }
+    },
+    "python": {
+      "name": "Python应用模板",
+      "description": "Python应用程序模板，包含日志、配置和异步支持",
+      "category": "backend",
+      "language": "python",
+      "extension": ".py",
+      "variables": {
+        "title": {
+          "type": "string",
+          "default": "Python应用",
+          "description": "应用标题"
+        },
+        "description": {
+          "type": "string",
+          "default": "一个Python应用程序",
+          "description": "应用描述"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "版本号"
+        },
+        "date": {
+          "type": "string",
+          "default": "{{currentDate}}",
+          "description": "创建日期"
+        },
+        "className": {
+          "type": "string",
+          "default": "MyApp",
+          "description": "主类名"
+        },
+        "filename": {
+          "type": "string",
+          "default": "app",
+          "description": "文件名（不含扩展名）"
+        }
+      }
+    },
+    "react-component": {
+      "name": "React组件模板",
+      "description": "现代React函数组件模板，包含Hooks和最佳实践",
+      "category": "frontend",
+      "language": "javascript",
+      "extension": ".jsx",
+      "variables": {
+        "componentName": {
+          "type": "string",
+          "default": "MyComponent",
+          "description": "组件名称"
+        },
+        "description": {
+          "type": "string",
+          "default": "一个React组件",
+          "description": "组件描述"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "版本号"
+        },
+        "date": {
+          "type": "string",
+          "default": "{{currentDate}}",
+          "description": "创建日期"
+        },
+        "title": {
+          "type": "string",
+          "default": "默认标题",
+          "description": "默认标题"
+        }
+      }
+    },
+    "styles": {
+      "name": "CSS样式模板",
+      "description": "现代CSS样式模板，包含CSS变量、工具类和响应式设计",
+      "category": "frontend",
+      "language": "css",
+      "extension": ".css",
+      "variables": {
+        "title": {
+          "type": "string",
+          "default": "样式表",
+          "description": "样式表标题"
+        },
+        "description": {
+          "type": "string",
+          "default": "现代CSS样式表",
+          "description": "样式表描述"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "版本号"
+        },
+        "date": {
+          "type": "string",
+          "default": "{{currentDate}}",
+          "description": "创建日期"
+        }
+      }
+    },
+    "readme": {
+      "name": "README文档模板",
+      "description": "完整的README.md模板，包含项目文档的所有必要部分",
+      "category": "documentation",
+      "language": "markdown",
+      "extension": ".md",
+      "variables": {
+        "title": {
+          "type": "string",
+          "default": "我的项目",
+          "description": "项目标题"
+        },
+        "description": {
+          "type": "string",
+          "default": "一个很棒的项目",
+          "description": "项目描述"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "项目版本"
+        },
+        "license": {
+          "type": "string",
+          "default": "MIT",
+          "description": "许可证类型"
+        },
+        "coverage": {
+          "type": "string",
+          "default": "90",
+          "description": "测试覆盖率"
+        },
+        "username": {
+          "type": "string",
+          "default": "username",
+          "description": "GitHub用户名"
+        },
+        "projectName": {
+          "type": "string",
+          "default": "my-project",
+          "description": "项目名称"
+        },
+        "nodeVersion": {
+          "type": "string",
+          "default": "16.0.0",
+          "description": "Node.js版本要求"
+        },
+        "npmVersion": {
+          "type": "string",
+          "default": "7.0.0",
+          "description": "npm版本要求"
+        },
+        "yarnVersion": {
+          "type": "string",
+          "default": "1.22.0",
+          "description": "yarn版本要求"
+        },
+        "additionalRequirements": {
+          "type": "string",
+          "default": "无其他要求",
+          "description": "其他环境要求"
+        },
+        "packageName": {
+          "type": "string",
+          "default": "my-package",
+          "description": "包名"
+        },
+        "mainClass": {
+          "type": "string",
+          "default": "MyClass",
+          "description": "主类名"
+        },
+        "instanceName": {
+          "type": "string",
+          "default": "myInstance",
+          "description": "实例名"
+        },
+        "configFileName": {
+          "type": "string",
+          "default": "config.json",
+          "description": "配置文件名"
+        },
+        "author": {
+          "type": "string",
+          "default": "开发者",
+          "description": "作者姓名"
+        },
+        "email": {
+          "type": "string",
+          "default": "developer@example.com",
+          "description": "联系邮箱"
+        },
+        "year": {
+          "type": "string",
+          "default": "{{currentYear}}",
+          "description": "版权年份"
+        },
+        "date": {
+          "type": "string",
+          "default": "{{currentDate}}",
+          "description": "创建日期"
+        },
+        "discordInvite": {
+          "type": "string",
+          "default": "your-discord-invite",
+          "description": "Discord邀请链接"
+        },
+        "telegramGroup": {
+          "type": "string",
+          "default": "your-telegram-group",
+          "description": "Telegram群组"
+        },
+        "wechatGroup": {
+          "type": "string",
+          "default": "微信群二维码",
+          "description": "微信群信息"
+        }
+      }
+    }
+  },
+  "categories": {
+    "web": {
+      "name": "Web开发",
+      "description": "HTML、CSS、JavaScript等Web相关模板"
+    },
+    "frontend": {
+      "name": "前端开发",
+      "description": "React、Vue、Angular等前端框架模板"
+    },
+    "backend": {
+      "name": "后端开发",
+      "description": "Node.js、Python、Java等后端语言模板"
+    },
+    "documentation": {
+      "name": "文档",
+      "description": "README、API文档等文档模板"
+    },
+    "config": {
+      "name": "配置文件",
+      "description": "各种配置文件模板"
+    }
+  },
+  "globalVariables": {
+    "currentDate": {
+      "type": "computed",
+      "function": "getCurrentDate",
+      "format": "YYYY-MM-DD"
+    },
+    "currentYear": {
+      "type": "computed",
+      "function": "getCurrentYear"
+    },
+    "currentDateTime": {
+      "type": "computed",
+      "function": "getCurrentDateTime",
+      "format": "YYYY-MM-DD HH:mm:ss"
+    }
+  },
+  "settings": {
+    "templateDirectory": "./templates",
+    "outputDirectory": "./output",
+    "variableDelimiter": {
+      "start": "{{",
+      "end": "}}"
+    },
+    "encoding": "utf8",
+    "preserveLineEndings": true,
+    "allowOverwrite": false
+  }
+}

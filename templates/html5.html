@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{description}}">
+    <meta name="keywords" content="{{keywords}}">
+    <meta name="author" content="{{author}}">
+    <title>{{title}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        main {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{{title}}</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main>
+            <h2>欢迎使用HTML5模板</h2>
+            <p>这是一个响应式的HTML5模板，包含了现代Web开发的最佳实践。</p>
+            
+            <h3>特性</h3>
+            <ul>
+                <li>响应式设计</li>
+                <li>现代CSS样式</li>
+                <li>SEO友好的元标签</li>
+                <li>跨浏览器兼容</li>
+            </ul>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; {{year}} {{author}}. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 在这里添加JavaScript代码
+        console.log('HTML5模板加载完成');
+        
+        // 示例：动态设置年份
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearElements = document.querySelectorAll('[data-year]');
+            const currentYear = new Date().getFullYear();
+            yearElements.forEach(el => el.textContent = currentYear);
+        });
+    </script>
+</body>
+</html>

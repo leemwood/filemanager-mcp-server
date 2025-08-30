@@ -72,10 +72,19 @@ npm install
 
 配置完成后，您可以在 Trae IDE 中使用自然语言进行文件管理：
 
+#### 基础操作
 - "创建一个新的配置文件 config.json"
 - "复制 README.md 到 docs 文件夹"
 - "搜索所有的 JavaScript 文件"
 - "批量删除所有临时文件"
+
+#### 增强功能 ✨
+- "使用 Node.js 模板创建一个新的应用文件"
+- "在文件末尾追加日志信息，并创建备份"
+- "创建一个完整的 React 项目结构"
+- "只读取文件的第 10-20 行内容"
+- "使用自定义变量从 HTML 模板创建页面"
+- "以 append 模式编辑配置文件，不覆盖现有内容"
 
 ## 功能特性
 
@@ -87,6 +96,12 @@ npm install
 - **copy_file** - 复制文件或文件夹
 - **move_file** - 移动或重命名文件
 - **get_file_info** - 获取文件详细信息
+
+### 增强文件操作 ✨
+- **edit_file_advanced** - 高级文件编辑（支持多种编辑模式、自动备份、编码选择）
+- **read_file_advanced** - 高级文件读取（支持按行读取、按字节读取、编码选择）
+- **create_from_template** - 从模板创建文件（支持变量替换）
+- **create_project_structure** - 创建项目目录结构（支持预定义和自定义结构）
 
 ### 目录操作
 - **list_directory** - 列出目录内容
@@ -160,6 +175,84 @@ npm install
     "sources": ["src/file1.js", "src/file2.js"],
     "destination": "./backup",
     "preserve_structure": false
+  }
+}
+```
+
+### 增强功能 API
+
+#### 高级文件编辑
+```json
+{
+  "name": "edit_file_advanced",
+  "arguments": {
+    "path": "config.json",
+    "content": "新的配置内容",
+    "encoding": "utf8",
+    "backup": true,
+    "mode": "overwrite"
+  }
+}
+```
+
+支持的编辑模式：
+- `overwrite` - 覆盖整个文件
+- `append` - 追加到文件末尾
+- `prepend` - 插入到文件开头
+- `insert` - 在指定位置插入（需要 `position` 参数）
+
+#### 从模板创建文件
+```json
+{
+  "name": "create_from_template",
+  "arguments": {
+    "template": "nodejs",
+    "path": "./my-app.js",
+    "variables": {
+      "AUTHOR": "Your Name",
+      "PROJECT_NAME": "My Project",
+      "VERSION": "1.0.0"
+    }
+  }
+}
+```
+
+可用模板：
+- `html5` - HTML5 页面模板
+- `nodejs` - Node.js 应用模板
+- `python` - Python 脚本模板
+- `react-component` - React 组件模板
+- `styles` - CSS 样式模板
+- `readme` - README 文档模板
+
+#### 创建项目结构
+```json
+{
+  "name": "create_project_structure",
+  "arguments": {
+    "basePath": "./my-project",
+    "template": "react"
+  }
+}
+```
+
+预定义项目结构：
+- `nodejs` - Node.js 项目结构
+- `react` - React 应用结构
+- `python` - Python 项目结构
+- `express` - Express.js 应用结构
+
+#### 高级文件读取
+```json
+{
+  "name": "read_file_advanced",
+  "arguments": {
+    "path": "large-file.txt",
+    "encoding": "utf8",
+    "lines": {
+      "start": 10,
+      "end": 20
+    }
   }
 }
 ```
