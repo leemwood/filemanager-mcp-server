@@ -1,22 +1,56 @@
 {
-  "name": "filemanager",
+  "name": "filemanager-mcp-server",
   "version": "1.0.0",
-  "description": "Windows文件管理器MCP服务，提供基础文件管理功能",
+  "description": "A powerful file management MCP server providing comprehensive file and directory operations for Windows systems",
   "main": "index.js",
   "bin": {
-    "filemanager": "./index.js"
+    "filemanager-mcp": "./index.js"
   },
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node example-usage.js",
+    "prepublishOnly": "npm test"
   },
-  "keywords": ["mcp", "file-manager", "windows", "file-operations"],
-  "author": "",
+  "keywords": [
+    "mcp",
+    "file-manager",
+    "windows",
+    "file-operations",
+    "model-context-protocol",
+    "file-system",
+    "batch-operations",
+    "directory-management",
+    "trae-ide"
+  ],
+  "author": {
+    "name": "leemwood",
+    "url": "https://github.com/leemwood"
+  },
   "license": "ISC",
   "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leemwood/filemanager-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leemwood/filemanager-mcp-server/issues"
+  },
+  "homepage": "https://github.com/leemwood/filemanager-mcp-server#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "example-usage.js",
+    "mcp-config-example.json"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.3",
     "fs-extra": "^11.3.1",
     "path": "^0.12.7"
+  },
+  "peerDependencies": {
+    "node": ">=14.0.0"
   }
 }

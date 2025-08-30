@@ -6,21 +6,63 @@
 
 ### 安装
 
+#### 全局安装（推荐）
+
 ```bash
-npm install
+npm install -g filemanager-mcp-server
+```
+
+#### 项目内安装
+
+```bash
+npm install filemanager-mcp-server
 ```
 
 ### 配置 MCP 服务
 
 在 Trae IDE 的 MCP 配置中添加：
 
+
+```json
+{
+  "mcpServers": {
+    "filemanager": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "filemanager-mcp-server"
+      ]
+    }
+  }
+}
+```
+
+#### 手动指定路径（如果上述方法不工作）
+
+克隆仓库
+
+```bash
+git clone https://github.com/yourusername/filemanager-mcp-server.git
+```
+
+进入项目目录
+
+```bash
+cd filemanager-mcp-server
+```
+
+安装依赖
+
+```bash
+npm install
+```
+
 ```json
 {
   "mcpServers": {
     "filemanager": {
       "command": "node",
-      "args": ["path/to/filemanager/index.js"],//核心文件位置
-      "cwd": "path/to/filemanager",//工作目录
+      "args": ["node_modules/filemanager-mcp-server/index.js"]
     }
   }
 }
