@@ -187,10 +187,7 @@ node example-usage.js
 - 支持 UTF-8 编码的文本文件
 - 搜索功能支持通配符模式（* 匹配任意字符）
 
-## 许可证
-
-ISC
 
 ---
 
-**GitHub**: [filemanager-mcp-server](https://github.com/ning-g-mo/filemanager-mcp-server)
+**GitHub**: [filemanager-mcp-server](https://github.com/leemwood/filemanager-mcp-server)
